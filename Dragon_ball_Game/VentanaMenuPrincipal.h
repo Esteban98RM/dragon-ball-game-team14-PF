@@ -1,5 +1,5 @@
-#ifndef VENTANAJUEGO_H
-#define VENTANAJUEGO_H
+#ifndef VENTANAMENUPRINCIPAL_H
+#define VENTANAMENUPRINCIPAL_H
 
 #include <QWidget>
 #include <QPushButton>
@@ -9,15 +9,15 @@
 #include <QTimer>
 #include <QSoundEffect>
 
-class VentanaJuego : public QWidget
+class VentanaMenuPrincipal : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit VentanaJuego(QWidget *parent = nullptr);
+    explicit VentanaMenuPrincipal(QWidget *parent = nullptr);
 
 signals:
-    void iniciarJuegoCompleto();
+    void iniciarJuegoCompleto();  // Modo historia
     void mostrarNivel1();
     void mostrarNivel2();
     void mostrarNivel3();
@@ -37,7 +37,8 @@ private:
     QFrame *marcoLogo;
     QTimer *timerColor;
     QSoundEffect *efectoBoton;
+
     int colorIndex;
 };
 
-#endif // VENTANAJUEGO_H
+#endif // VENTANAMENUPRINCIPAL_H

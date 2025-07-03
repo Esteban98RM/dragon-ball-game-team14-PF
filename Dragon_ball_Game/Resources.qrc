@@ -5,5 +5,12 @@
         <file>Recursos/backgraunds/BACKGRAUND NIVEL 3.png</file>
         <file>Recursos/fuente/Saiyan-Sans.ttf</file>
         <file>Recursos/titulo/dragonball_logo.png</file>
+        <file>Recursos/backgraunds/fondo_emergente.png</file>
+        <file>Recursos/backgraunds/fondo_panel.png</file>
+        <file>Recursos/backgraunds/img_game_over.png</file>
+        <file>Recursos/objetos/burbuja.png</file>
+        <file>Recursos/objetos/EdelDragon.png</file>
+        <file>Recursos/objetos/plataforma.png</file>
+        <file>Recursos/personaje/goku.png</file>
     </qresource>
 </RCC>
