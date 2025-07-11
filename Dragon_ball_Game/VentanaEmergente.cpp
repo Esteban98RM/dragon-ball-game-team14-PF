@@ -1,6 +1,12 @@
 #include "VentanaEmergente.h"
+
 #include <QGraphicsDropShadowEffect>
 #include <QPainterPath>
+#include <QKeyEvent>
+
+// ============================================
+// CONSTRUCTOR Y CONFIGURACIÓN INICIAL
+// ============================================
 
 VentanaEmergente::VentanaEmergente(TipoMensaje tipo, QWidget *parent)
     : QDialog(parent, Qt::Dialog | Qt::FramelessWindowHint)
@@ -38,7 +44,7 @@ VentanaEmergente::VentanaEmergente(TipoMensaje tipo, QWidget *parent)
 
     // Layout de contenido sobre el fondo
     QVBoxLayout *contenidoLayout = new QVBoxLayout();
-    contenidoLayout->setContentsMargins(420, 170, 40, 40); // Más abajo para no tapar el logo
+    contenidoLayout->setContentsMargins(420, 170, 40, 40);
     contenidoLayout->setSpacing(15);
 
     // Mensaje central
@@ -74,7 +80,7 @@ VentanaEmergente::VentanaEmergente(TipoMensaje tipo, QWidget *parent)
         botonAccion->setText("Siguiente Nivel");
         break;
     case JUEGO_COMPLETADO:
-        mensajeLabel->setText("¡Has reunido las 7 Esferas del Dragon!");
+        mensajeLabel->setText("¡GANASTE! Juego Terminado - ¡Has reunido las 7 Esferas del Dragon!");
         botonAccion->setText("Volver al Menú");
         break;
     }
@@ -100,6 +106,9 @@ VentanaEmergente::VentanaEmergente(TipoMensaje tipo, QWidget *parent)
     configurarEstilo();
 }
 
+// ============================================
+// CONFIGURACIÓN DE ESTILOS Y EFECTOS
+// ============================================
 
 void VentanaEmergente::configurarEstilo() {
     int id = QFontDatabase::addApplicationFont(":/Recursos/fuente/Saiyan-Sans.ttf");
@@ -135,3 +144,33 @@ void VentanaEmergente::configurarEstilo() {
         );
 }
 
+// ============================================
+// FUNCIONES DE CONTROL Y COMPORTAMIENTO
+// ============================================
+
+void VentanaEmergente::forzarModoReintentar() {
+    QPushButton* botonAccion = findChild<QPushButton*>();
+    if (botonAccion) botonAccion->setText("Volver al Menú");
+    QPushButton* botonReintentar = findChildren<QPushButton*>().value(1);
+    if (botonReintentar) botonReintentar->show();
+
+    disconnect(botonAccion, nullptr, nullptr, nullptr);
+    connect(botonAccion, &QPushButton::clicked, [=]() {
+        emit volverAlMenu();
+        close();
+    });
+}
+
+// ============================================
+// MANEJO DE EVENTOS
+// ============================================
+
+void VentanaEmergente::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape) {
+        qDebug() << "[VentanaEmergente] Tecla Escape ignorada.";
+        return;  // Evita que cierre la ventana
+    }
+
+    QDialog::keyPressEvent(event);  // Pasa otros eventos normalmente
+}

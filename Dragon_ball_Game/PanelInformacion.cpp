@@ -5,6 +5,10 @@
 #include <QGraphicsDropShadowEffect>
 #include <QPropertyAnimation>
 
+// ============================================
+// CONSTRUCTOR Y CONFIGURACIÓN INICIAL
+// ============================================
+
 PanelInformacion::PanelInformacion(QWidget *parent)
     : QWidget(parent), tiempoRestante(TIEMPO_NIVEL)
 {
@@ -22,6 +26,7 @@ PanelInformacion::PanelInformacion(QWidget *parent)
     labelVidas = new QLabel("Vidas: 3", this);
     labelEsferas = new QLabel("Esferas: 0/7", this);
     labelTiros = new QLabel("Tiros: 0", this);
+    labelObjetivos = new QLabel("Objetivos: 0/5", this);
 
     // Añadir widgets al layout
     layout->addWidget(labelTitulo);
@@ -31,6 +36,7 @@ PanelInformacion::PanelInformacion(QWidget *parent)
     layout->addWidget(labelVidas);
     layout->addWidget(labelEsferas);
     layout->addWidget(labelTiros);
+    layout->addWidget(labelObjetivos);
     layout->addStretch();
 
     // Configurar estilos
@@ -40,6 +46,10 @@ PanelInformacion::PanelInformacion(QWidget *parent)
     timerTiempo = new QTimer(this);
     connect(timerTiempo, &QTimer::timeout, this, &PanelInformacion::actualizarTiempo);
 }
+
+// ============================================
+// CONFIGURACIÓN DE ESTILOS Y EFECTOS
+// ============================================
 
 void PanelInformacion::configurarEstilo()
 {
@@ -101,34 +111,59 @@ void PanelInformacion::configurarEstilo()
     labelVidas->setFont(fuenteDragonBall);
     labelEsferas->setFont(fuenteDragonBall);
     labelTiros->setFont(fuenteDragonBall);
+    labelObjetivos->setFont(fuenteDragonBall);
 
     labelTiempo->setStyleSheet(estiloInfo + "QLabel { color: #00FF00; }"); // Inicialmente verde
     labelNivel->setStyleSheet(estiloInfo);
     labelVidas->setStyleSheet(estiloInfo);
     labelEsferas->setStyleSheet(estiloInfo);
     labelTiros->setStyleSheet(estiloInfo);
+    labelObjetivos->setStyleSheet(estiloInfo);
 }
 
-void PanelInformacion::actualizarInformacion(Goku* goku, int nivelActual)
+// ============================================
+// ACTUALIZACIÓN DE INFORMACIÓN
+// ============================================
+
+void PanelInformacion::actualizarInformacion(Goku* goku, int nivelActual, bool modoHistoria, int objetivosEntregados)
 {
     if (!goku) return;
 
     labelNivel->setText(QString("Nivel: %1").arg(nivelActual));
     labelVidas->setText(QString("Vidas: %1").arg(goku->getVidas()));
-    labelEsferas->setText(QString("Esferas: %1/7").arg(goku->getEsferasRecolectadas()));
+
+    int maxEsferas = modoHistoria ? 7 : (nivelActual == 1 || nivelActual == 2 ? 2 : 3);
+    labelEsferas->setText(QString("Esferas: %1/%2")
+                              .arg(goku->getEsferasRecolectadas())
+                              .arg(maxEsferas));
+
     labelTiros->setText(QString("Tiros: %1").arg(goku->getTirosDisponibles()));
 
+    labelObjetivos->setText(QString("Objetivos: %1/5").arg(objetivosEntregados));
+
+    // Cambiar color si se recolectaron suficientes esferas
     if (goku->getEsferasRecolectadas() >= 2) {
         labelEsferas->setStyleSheet("QLabel { color: #00FF00; background-color: transparent; padding: 3px; }");
     }
 
+    // Cambiar color si se acabaron los tiros
     if (nivelActual > 1 && goku->getTirosDisponibles() <= 0) {
         labelTiros->setStyleSheet("QLabel { color: #FF4444; background-color: transparent; padding: 3px; }");
     } else {
         labelTiros->setStyleSheet("QLabel { color: white; background-color: transparent; padding: 3px; }");
     }
 
+    // Cambiar color si se entregaron todos los objetivos
+    if (objetivosEntregados >= 5) {
+        labelObjetivos->setStyleSheet("QLabel { color: #00FF00; background-color: transparent; padding: 3px; }");
+    } else {
+        labelObjetivos->setStyleSheet("QLabel { color: white; background-color: transparent; padding: 3px; }");
+    }
 }
+
+// ============================================
+// SISTEMA DE TIEMPO Y TEMPORIZADOR
+// ============================================
 
 void PanelInformacion::iniciarTiempo()
 {
@@ -170,6 +205,10 @@ void PanelInformacion::actualizarTiempo()
         emit tiempoAgotado();
     }
 }
+
+// ============================================
+// UTILIDADES Y FORMATEO
+// ============================================
 
 QString PanelInformacion::formatearTiempo(int segundos)
 {

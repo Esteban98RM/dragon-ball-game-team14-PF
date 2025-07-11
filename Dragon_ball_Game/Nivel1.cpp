@@ -1,3 +1,4 @@
+#include "Juego.h"
 #include "Nivel1.h"
 #include "Plataforma.h"
 #include "Goku.h"
@@ -8,6 +9,10 @@
 #include <QDebug>
 #include <QGraphicsRectItem>
 #include <QTimer>
+
+// ============================================
+// CONSTRUCTOR
+// ============================================
 
 Nivel1::Nivel1(QObject *parent)
     : Nivel(parent), goku(nullptr), timerCaida(new QTimer(this)), velocidadCaida(2.0f)
@@ -20,6 +25,10 @@ Nivel1::Nivel1(QObject *parent)
     connect(timerFisica, &QTimer::timeout, this, &Nivel1::actualizarFisica);
     timerFisica->start(30);
 }
+
+// ============================================
+// SISTEMA DE CARGA DE NIVEL
+// ============================================
 
 void Nivel1::cargarFondo()
 {
@@ -75,7 +84,7 @@ void Nivel1::agregarPlataformas()
     };
 
     for (int i = 0; i < posiciones.size(); ++i) {
-        Plataforma* p = new Plataforma(TipoPlataforma::FIJA, posiciones[i].x(), posiciones[i].y(), 100.0f);
+        Plataforma* p = new Plataforma(TipoPlataforma::MOVIL, posiciones[i].x(), posiciones[i].y(), 100.0f);
         if (i == 8) {
             p->setEsFinal(true); // Marcar plataforma final
         }
@@ -108,6 +117,10 @@ void Nivel1::agregarItems()
     esfera2->setParentItem(plataformas[8]);
     esfera2->setPos(25, -40);
 }
+
+// ============================================
+// SISTEMA DE FÍSICAS Y COLISIONES
+// ============================================
 
 void Nivel1::actualizarFisica()
 {
@@ -145,6 +158,9 @@ void Nivel1::actualizarFisica()
     }
 }
 
+// ============================================
+// SISTEMA DE REINICIO DE NIVEL
+// ============================================
 
 void Nivel1::reiniciarNivel()
 {
@@ -155,11 +171,13 @@ void Nivel1::reiniciarNivel()
     goku->setVelocidad(0, 0);
     goku->setVelocidadSalto(0);
     goku->setEnSalto(false);
+
+    emit reinicioCompletado();
 }
 
-Personaje* Nivel1::getPersonaje() const {
-    return goku;
-}
+// ============================================
+// SISTEMA DE OBJETIVOS Y LOGROS
+// ============================================
 
 bool Nivel1::verificarObjetivoCompleto()
 {
@@ -187,12 +205,15 @@ bool Nivel1::verificarObjetivoCompleto()
     return false;
 }
 
-
 bool Nivel1::estaEnPlataformaFinal() const {
     if (!goku || plataformas.size() < 9) return false;
     QGraphicsItem* parentItem = goku->parentItem();
     return (parentItem == plataformas[8]);
 }
+
+// ============================================
+// SISTEMA DE ANIMACIONES Y FINALIZACION
+// ============================================
 
 void Nivel1::detenerTodasLasPlataformas()
 {
@@ -231,3 +252,10 @@ void Nivel1::animarPlataformaFinalYMostrarVentana()
     timerBajada->start(40);
 }
 
+// ============================================
+// GETTERS Y UTILIDADES
+// ============================================
+
+Personaje* Nivel1::getPersonaje() const {
+    return goku;
+}

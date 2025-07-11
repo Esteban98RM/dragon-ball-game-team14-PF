@@ -15,7 +15,6 @@ SOURCES += \
     Caparazon.cpp \
     EsferaDragon.cpp \
     Fisica.cpp \
-    GestorSprites.cpp \
     Goku.cpp \
     Item.cpp \
     Juego.cpp \
@@ -38,7 +37,6 @@ HEADERS += \
     Caparazon.h \
     EsferaDragon.h \
     Fisica.h \
-    GestorSprites.h \
     Goku.h \
     Item.h \
     Juego.h \
