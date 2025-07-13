@@ -48,7 +48,7 @@ private:
     QPointF puntoAleatorioEnRect(const QRectF& rect);
 
     // ========== PERSONAJE ==========
-    Goku* goku = nullptr;
+    Goku* goku;
 
     // ========== ELEMENTOS DEL NIVEL ==========
     QGraphicsRectItem* zonaAgua = nullptr;
