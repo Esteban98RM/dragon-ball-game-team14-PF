@@ -554,34 +554,55 @@ void Goku::recolectar(Item* item)
 // SISTEMA DE INVULNERABILIDAD
 // ============================================
 
+// void Goku::activarInvulnerabilidad(int ms)
+// {
+//     if (invulnerable) return;
+
+//     invulnerable = true;
+
+//     if (!timerInvulnerabilidad)
+//         timerInvulnerabilidad = new QTimer(this);
+
+//     int intervalo = 200;
+//     int repeticiones = ms / intervalo;
+//     auto contador = std::make_shared<int>(0);
+
+//     disconnect(timerInvulnerabilidad);
+
+//     connect(timerInvulnerabilidad, &QTimer::timeout, this, [=]() mutable {
+//         qreal nuevaOpacidad = (opacity() == 1.0) ? 0.5 : 1.0;
+//         setOpacity(nuevaOpacidad);
+
+//         (*contador)++;
+//         if (*contador >= repeticiones) {
+//             timerInvulnerabilidad->stop();
+//             setOpacity(1.0);
+//             invulnerable = false;
+//         }
+//     });
+
+//     timerInvulnerabilidad->start(intervalo);
+// }
+
 void Goku::activarInvulnerabilidad(int ms)
 {
     if (invulnerable) return;
 
     invulnerable = true;
+    setOpacity(0.5);
 
     if (!timerInvulnerabilidad)
         timerInvulnerabilidad = new QTimer(this);
 
-    int intervalo = 200;
-    int repeticiones = ms / intervalo;
-    auto contador = std::make_shared<int>(0);
+    disconnect(timerInvulnerabilidad, nullptr, nullptr, nullptr);
 
-    disconnect(timerInvulnerabilidad);
-
-    connect(timerInvulnerabilidad, &QTimer::timeout, this, [=]() mutable {
-        qreal nuevaOpacidad = (opacity() == 1.0) ? 0.5 : 1.0;
-        setOpacity(nuevaOpacidad);
-
-        (*contador)++;
-        if (*contador >= repeticiones) {
-            timerInvulnerabilidad->stop();
-            setOpacity(1.0);
-            invulnerable = false;
-        }
+    connect(timerInvulnerabilidad, &QTimer::timeout, this, [=]() {
+        timerInvulnerabilidad->stop();
+        setOpacity(1.0);
+        invulnerable = false;
     });
 
-    timerInvulnerabilidad->start(intervalo);
+    timerInvulnerabilidad->start(ms);
 }
 
 // ============================================

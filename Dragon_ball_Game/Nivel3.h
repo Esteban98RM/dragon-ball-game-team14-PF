@@ -45,6 +45,7 @@ private:
 
     // ========== MÉTODOS PRIVADOS - LÓGICA DE JUEGO ==========
     void procesarVictoriaSiCorresponde();
+    void manejarGameOver();
     QPointF puntoAleatorioEnRect(const QRectF& rect);
 
     // ========== PERSONAJE ==========

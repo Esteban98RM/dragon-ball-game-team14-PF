@@ -60,7 +60,6 @@ Juego::Juego(QWidget *parent)
     AudioManager* audioManager = AudioManager::instancia();
 
     // Cargar y reproducir música de fondo
-    // Asegúrate de que el archivo esté en tu .qrc
     audioManager->cargarMusicaFondo(":/Recursos/Audio/musica_fondo.wav");
 
     // Configurar volumen bajo para que no interfiera
@@ -113,6 +112,7 @@ void Juego::volverAlMenu() {
     timerActualizacionPanel->stop();
     panelInfo->pausarTiempo();
     eliminarNivelActual();
+    setGameOver(false);
     layoutPrincipal->setCurrentWidget(menu);
 
     // Reiniciar progreso historia
@@ -144,6 +144,7 @@ void Juego::cargarNivel(TipoNivel tipo)
         break;
     case TipoNivel::DOS:
         nivelActual = new Nivel2(this);
+        static_cast<Nivel2*>(nivelActual)->setJuego(this);
         connect(nivelActual, &Nivel::reinicioCompletado, this, [this]() {
             qDebug() << "[Juego] Reinicio completado. Game Over desactivado.";
             this->setGameOver(false);
@@ -198,10 +199,12 @@ void Juego::cargarNivel(TipoNivel tipo)
 void Juego::eliminarNivelActual()
 {
     if (nivelActual) {
-        nivelActual->deleteLater();
+        vistaNivel->setScene(nullptr);
+        delete nivelActual;
         nivelActual = nullptr;
     }
 }
+
 
 // ============================================
 // MANEJO DE EVENTOS DE TECLADO
